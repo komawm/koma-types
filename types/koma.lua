@@ -23,6 +23,76 @@
 
 ---@class KomaAction
 
+---@class KomaBorderSpec
+---@field enabled? boolean
+---@field width? number
+---@field active_color? string
+---@field inactive_color? string
+---@field agent_leased_color? string
+---@field human_preempt_color? string
+
+---@class KomaFocusRingSpec
+---@field enabled? boolean
+---@field width? number
+---@field active_color? string
+---@field inactive_color? string
+
+---@class KomaShadowSpec
+---@field enabled? boolean
+---@field range? integer
+---@field render_power? integer
+---@field sharp? boolean
+---@field color? string
+---@field inactive_color? string
+---@field offset_x? number
+---@field offset_y? number
+---@field scale? number
+
+---@class KomaDimSpec
+---@field dim_inactive? boolean
+---@field dim_strength? number
+---@field brightness? number
+---@field contrast? number
+
+---@class KomaBlurSpec
+---@field enabled? boolean
+---@field size? integer
+---@field passes? integer
+---@field noise? number
+---@field contrast? number
+---@field brightness? number
+---@field vibrancy? number
+---@field xray? boolean
+---@field ignore_opacity? boolean
+
+---@class KomaAnimationsSpec
+---@field enabled? boolean
+---@field damping_ratio? number
+---@field stiffness? number
+---@field epsilon? number
+---@field open_scale_from? number
+---@field close_scale_to? number
+
+---@class KomaAppearanceSpec
+---@field corner_radius? integer
+---@field border? KomaBorderSpec
+---@field focus_ring? KomaFocusRingSpec
+---@field shadow? KomaShadowSpec
+---@field dim? KomaDimSpec
+---@field brightness? number
+---@field dim_inactive? boolean
+---@field dim_strength? number
+---@field blur? KomaBlurSpec
+---@field animations? KomaAnimationsSpec
+
+---@class KomaInputSpec
+---@field mod_key? string
+---@field inherit_default_binds? boolean
+---@field keyboard? table
+---@field pointer? table
+---@field touchpad? table
+---@field tablet? table
+
 ---@class KomaMacroContext
 local MacroContext = {}
 ---@param app_regex string
@@ -61,16 +131,18 @@ function MacroContext:text(utf8, opts) end
 function MacroContext:paste_mime(mime_type, payload) end
 
 ---@class KomaGlobal
+---@field layout fun(mode: KomaLayoutMode)
 ---@field monitor fun(spec: table)
 ---@field workspace fun(spec: table)
 ---@field dwindle fun(spec: { force_split?: 0|1|2, preserve_split?: boolean, smart_split?: boolean, use_active_for_splits?: boolean, default_split_ratio?: number, split_width_multiplier?: number, smart_resizing?: boolean, pseudotile?: boolean, inner_gap?: integer, outer_gap?: integer })
----@field scrolling fun(spec: { preset_column_widths?: KomaPresetColumnWidth[], preset_window_heights?: KomaPresetColumnWidth[], default_column_width?: KomaPresetColumnWidth, default_column_display?: KomaColumnDisplay, tab_indicator?: { enabled?: boolean, hide_when_single_tab?: boolean, place_within_column?: boolean, position?: KomaTabIndicatorPosition, width?: number, gap?: number, gaps_between_tabs?: number, length_proportion?: number, corner_radius?: number }, center_focused_column?: KomaCenterFocusedColumn, always_center_single_column?: boolean, camera_damping_ratio?: number, camera_stiffness?: number, swipe_working_area_movement?: number, inner_gap?: integer, outer_gap?: integer, edge_auto_scroll?: { enabled?: boolean, trigger_width?: number, delay_ms?: integer, max_speed?: number } })
----@field input fun(spec: table)
+---@field scrolling fun(spec: { preset_column_widths?: KomaPresetColumnWidth[], preset_window_heights?: KomaPresetColumnWidth[], default_column_width?: KomaPresetColumnWidth, default_column_display?: KomaColumnDisplay, tab_indicator?: { enabled?: boolean, hide_when_single_tab?: boolean, place_within_column?: boolean, position?: KomaTabIndicatorPosition, width?: number, gap?: number, gaps_between_tabs?: number, length_proportion?: number, corner_radius?: number }, center_focused_column?: KomaCenterFocusedColumn, always_center_single_column?: boolean, camera_damping_ratio?: number, camera_stiffness?: number, swipe_working_area_movement?: number, inner_gap?: integer, outer_gap?: integer, edge_auto_scroll?: { enabled?: boolean, trigger_width?: number, delay_ms?: number, max_speed?: number } })
+---@field input fun(spec: KomaInputSpec)
 ---@field device fun(spec: table)
----@field appearance fun(spec: { corner_radius?: integer, border?: table, focus_ring?: table, shadow?: table, blur?: { enabled?: boolean, size?: integer, passes?: integer, noise?: number, contrast?: number, brightness?: number, vibrancy?: number, xray?: boolean, ignore_opacity?: boolean }, animations?: { enabled?: boolean, damping_ratio?: number, stiffness?: number, epsilon?: number, open_scale_from?: number, close_scale_to?: number } })
+---@field appearance fun(spec: KomaAppearanceSpec)
 ---@field xwayland fun(spec: { enabled?: boolean, path?: string, isolate_agent_workspaces?: boolean })
 ---@field env fun(key: string, val: string)
 ---@field bind fun(chord: string, action: KomaAction|fun(ctx: KomaMacroContext), opts?: { desc?: string, repeat?: boolean, cooldown_ms?: integer, allow_when_locked?: boolean, pass_through?: boolean, edge?: "press"|"release"|"both", when_preempted?: "allow"|"ignore" }): KomaHandle
+---@field unbind fun(chord: string)
 ---@field mode fun(name: string, spec: table)
 ---@field gesture fun(spec: { fingers: 2|3|4|5, direction: "left"|"right"|"up"|"down"|"horizontal"|"vertical"|"pinch_in"|"pinch_out", action: KomaAction|fun(ctx: KomaMacroContext), cooldown_ms?: integer, allow_when_locked?: boolean, when_preempted?: "allow"|"ignore", desc?: string }): KomaHandle
 ---@field on fun(event: string, callback: fun(ctx: KomaMacroContext))
