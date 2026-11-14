@@ -19,40 +19,46 @@
 ---@field y? number
 ---@field u? number
 ---@field v? number
+---@field grid_225? string
 
 ---@class KomaAction
 
 ---@class KomaMacroContext
----@field ws_id string
----@field epoch integer
----@field active_win_id? integer
 local MacroContext = {}
----@param target KomaAnchorPoint
----@param opts? { profile?: "instant"|"spring"|"minimum_jerk", duration_ms?: integer }
-function MacroContext:move_to(target, opts) end
----@param target? KomaAnchorPoint
----@param opts? { button?: "left"|"middle"|"right", count?: integer, hold_ms?: integer }
-function MacroContext:click(target, opts) end
----@param from KomaAnchorPoint
----@param to KomaAnchorPoint
----@param opts? { duration_ms?: integer }
-function MacroContext:drag(from, to, opts) end
----@param opts { dx?: number, dy?: number, steps?: integer }
-function MacroContext:scroll(opts) end
----@param chord string
-function MacroContext:key(chord) end
----@param text string
----@param opts? { strategy?: "auto"|"paste_clipboard"|"virtual_keyboard" }
-function MacroContext:type_text(text, opts) end
----@param mime_type string
----@param payload string
-function MacroContext:paste_mime(mime_type, payload) end
+---@param app_regex string
+function MacroContext:assert_app(app_regex) end
+---@param key string
+function MacroContext:key_down(key) end
+---@param key string
+function MacroContext:key_up(key) end
+---@param argv string[]
+function MacroContext:spawn(argv) end
 ---@param duration_ms integer
 function MacroContext:sleep_ms(duration_ms) end
 ---@param opts? { quiet_ms?: integer, timeout_ms?: integer }
 function MacroContext:wait_settle(opts) end
----@param argv string[]
-function MacroContext:spawn(argv) end
+---@param chord string
+---@param opts? { hold_ms?: integer, after_ms?: integer }
+function MacroContext:key(chord, opts) end
+---@param chords string[]
+---@param gap_ms integer
+function MacroContext:sequence(chords, gap_ms) end
+---@param target KomaAnchorPoint
+---@param kinematics? { profile?: "instant"|"minimum_jerk"|"spring", duration_ms?: integer, arc_curvature?: number }
+function MacroContext:move_to(target, kinematics) end
+---@param target KomaAnchorPoint
+---@param opts? { button?: "left"|"middle"|"right", clicks?: integer, hold_ms?: integer }
+function MacroContext:click(target, opts) end
+---@param spec { button?: "left"|"middle"|"right", from: KomaAnchorPoint, to: KomaAnchorPoint, hold_before_move_ms?: integer, kinematics?: { profile?: "instant"|"minimum_jerk"|"spring", duration_ms?: integer, arc_curvature?: number }, hold_before_release_ms?: integer }
+function MacroContext:drag(spec) end
+---@param spec { dx?: number, dy?: number, steps?: integer, step_ms?: integer }
+function MacroContext:scroll(spec) end
+---@param utf8 string
+---@param opts? { strategy?: "auto"|"text_input_v3"|"clipboard"|"xkb_keymap" }
+function MacroContext:text(utf8, opts) end
+---@param mime_type string
+---@param payload string
+function MacroContext:paste_mime(mime_type, payload) end
 
 ---@class KomaGlobal
 ---@field monitor fun(spec: table)

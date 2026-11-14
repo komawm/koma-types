@@ -15,10 +15,14 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: taiki-e/install-action@86f7a0ffb25f40114606501a311ebcfaf882ea32 # v2.88.0
+      - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4
         with:
-          tool: just@1.58.0,actionlint@1.7.12
+          just-version: "1.58.0"
       - name: Install Lua parser
         run: sudo apt-get update && sudo apt-get install --no-install-recommends -y lua5.4
-      - name: Run repository checks
-        run: just check
+      - name: Validate metadata, links, and Lua syntax
+        run: just metadata links syntax
+      - name: Lint GitHub workflows
+        uses: docker://rhysd/actionlint:1.7.12@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667
+        with:
+          args: -color
