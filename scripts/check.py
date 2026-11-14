@@ -22,7 +22,8 @@ with (ROOT / "artifact.toml").open("rb") as stream:
     artifact = tomllib.load(stream)["artifact"]
 snapshot = ROOT / artifact["path"]
 assert artifact["license"] == "Apache-2.0"
-assert artifact["generator_reproduced"] is False, "initial snapshot provenance changed: review evidence and validator policy"
+assert artifact["generator_reproduced"] is True, "snapshot must be reproduced from komactl gen-types"
+assert len(artifact["source_revision"]) == 40 and all(c in "0123456789abcdef" for c in artifact["source_revision"]), "source_revision must be a 40-char commit SHA"
 assert artifact["sha256"] == hashlib.sha256(snapshot.read_bytes()).hexdigest(), "snapshot hash differs from artifact metadata"
 assert "---@class" in snapshot.read_text(), "missing LuaCATS classes"
 license = (ROOT / "LICENSE").read_text()
