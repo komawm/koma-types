@@ -1,0 +1,15 @@
+[repo]
+name = "koma-types"
+kind = "types"
+lang = "lua"
+role = "Versioned Koma Lua configuration types"
+owner = "koma"
+repository = "https://github.com/komawm/koma-types"
+docs = "https://github.com/komawm/koma-types"
+
+[project]
+version = "0.0.1"
+release_line = "incubation"
+
+[licensing]
+content = "Apache-2.0"

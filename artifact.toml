@@ -1,0 +1,10 @@
+[artifact]
+name = "koma-lua-types"
+version = "0.0.1"
+path = "types/koma.lua"
+license = "Apache-2.0"
+source_repository = "https://github.com/komawm/koma"
+source_revision = "uncommitted-import"
+generator = "https://github.com/komawm/koma/blob/main/crates/koma-lua/src/typegen.rs"
+generator_reproduced = false
+sha256 = "104fa737f1d4b796bd259d1e3cbb84c645f2cc503052f0d3480668247fb67399"
