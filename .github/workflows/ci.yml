@@ -20,8 +20,8 @@ jobs:
           just-version: "1.58.0"
       - name: Install Lua parser
         run: sudo apt-get update && sudo apt-get install --no-install-recommends -y lua5.4
-      - name: Validate metadata, links, and Lua syntax
-        run: just metadata links syntax
+      - name: Validate metadata, links, Lua syntax, and shell scripts
+        run: just metadata links syntax shell
       - name: Lint GitHub workflows
         uses: docker://rhysd/actionlint:1.7.12@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667
         with:
