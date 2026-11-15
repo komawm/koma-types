@@ -4,7 +4,15 @@ All notable changes to the koma-types LuaLS definitions are recorded here. Versi
 
 ## [Unreleased]
 
-## [0.0.1] - 2026-11-15
+## [0.0.1] - 2026-11-16
+
+### Added (agent cursor & multi-waypoint macro types)
+
+- Added `KomaPathSplineKind` (`"auto"` | `"catmull_rom"` | `"bezier"`),
+  `KomaAgentCursorSpec` (including `label_enabled?`), `KomaPathSpec`, and Lua
+  `MacroContext` trajectory methods (`move_path`, `stroke_path`, `path`,
+  `settle_cursor`) generated from `komactl gen-types` (`sha256`
+  `cd7d9c441db6f4c0e951341505685290cd90afcc84b10824ef3e6bf18a9f8df2`).
 
 Development prerelease.
 
