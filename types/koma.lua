@@ -8,6 +8,8 @@
 ---@alias KomaTabIndicatorPosition "left"|"right"|"top"|"bottom"
 ---@alias KomaPresetColumnWidth number|{ proportion: number }|{ fixed: integer }
 ---@alias KomaBlockOut "agent_capture"|"screencast"|"screencopy"|"all"
+---@alias KomaAnimationSolverKind "spring"|"hooke"|"hooke_spring"|"analytical_spring"|"analytical"
+---@alias KomaEventName "compositor.start"|"config.reloaded"|"window.mapped"|"window.closed"|"window.focused"|"workspace.focused"|"output.changed"
 
 ---@class KomaHandle
 ---@field set_enabled fun(self: KomaHandle, enabled: boolean)
@@ -30,6 +32,10 @@
 ---@field inactive_color? string
 ---@field agent_leased_color? string
 ---@field human_preempt_color? string
+---@field active_color_end? string
+---@field inactive_color_end? string
+---@field gradient_angle? number
+---@field gradient_rotate_rpm? number
 
 ---@class KomaFocusRingSpec
 ---@field enabled? boolean
@@ -65,13 +71,90 @@
 ---@field xray? boolean
 ---@field ignore_opacity? boolean
 
+---@class KomaCurveSpec
+---@field type? "spring"|"analytical_spring"|"bezier"|"instant"
+---@field mass? number
+---@field damping? number
+---@field damping_ratio? number
+---@field stiffness? number
+---@field epsilon? number
+---@field points? number[]
+---@field x1? number
+---@field y1? number
+---@field x2? number
+---@field y2? number
+---@field duration_ms? integer
+
+---@class KomaAnimationChannelSpec
+---@field enabled? boolean
+---@field curve? string
+---@field duration_ms? integer
+---@field style? string
+
 ---@class KomaAnimationsSpec
 ---@field enabled? boolean
 ---@field damping_ratio? number
 ---@field stiffness? number
+---@field mass? number
+---@field damping? number
+---@field solver? KomaAnimationSolverKind
 ---@field epsilon? number
 ---@field open_scale_from? number
 ---@field close_scale_to? number
+---@field curves? table<string, KomaCurveSpec|string>
+---@field windows_open? KomaAnimationChannelSpec
+---@field windows_in? KomaAnimationChannelSpec
+---@field windows_close? KomaAnimationChannelSpec
+---@field windows_out? KomaAnimationChannelSpec
+---@field windows_move? KomaAnimationChannelSpec
+---@field fade? KomaAnimationChannelSpec
+---@field border? KomaAnimationChannelSpec
+---@field workspaces? KomaAnimationChannelSpec
+
+---@class KomaWindowRuleSpec
+---@field name? string
+---@field matches? table[]
+---@field excludes? table[]
+---@field initial? table
+---@field opacity? number
+---@field inactive_opacity? number
+---@field animation? string
+---@field no_blur? boolean
+---@field no_shadow? boolean
+---@field border_color? string
+---@field corner_radius? integer
+---@field clip_to_geometry? boolean
+---@field focusable? boolean
+---@field pin_on_output? boolean
+---@field suppress_events? string[]
+---@field block_out_from? KomaBlockOut
+
+---@class KomaWindowInfo
+---@field id integer
+---@field app_id string
+---@field title string
+---@field workspace string
+---@field floating boolean
+---@field fullscreen boolean
+---@field focused boolean
+
+---@class KomaOutputInfo
+---@field name string
+---@field width integer
+---@field height integer
+---@field scale number
+---@field refresh_mhz integer
+---@field active_workspace string
+---@field focused boolean
+
+---@class KomaWorkspaceInfo
+---@field id string
+---@field name string
+---@field layout KomaLayoutMode
+---@field presentation "headed"|"headless"
+---@field focused_window_id? integer
+---@field window_count integer
+---@field active boolean
 
 ---@class KomaAppearanceSpec
 ---@field corner_radius? integer
@@ -176,6 +259,16 @@ function MacroContext:text(utf8, opts) end
 ---@param mime_type string
 ---@param payload string
 function MacroContext:paste_mime(mime_type, payload) end
+---@return KomaWindowInfo|nil
+function MacroContext:focused_window() end
+---@return KomaWindowInfo[]
+function MacroContext:windows() end
+---@return KomaOutputInfo[]
+function MacroContext:outputs() end
+---@return KomaWorkspaceInfo[]
+function MacroContext:workspaces() end
+---@param action KomaAction
+function MacroContext:dispatch(action) end
 
 ---@alias KomaMonitorTransform "normal"|"90"|"180"|"270"|"flipped"|"flipped_90"|"flipped-90"|"flipped_180"|"flipped-180"|"flipped_270"|"flipped-270"
 
@@ -224,14 +317,16 @@ function MacroContext:paste_mime(mime_type, payload) end
 ---@field input fun(spec: KomaInputSpec)
 ---@field device fun(spec: table)
 ---@field appearance fun(spec: KomaAppearanceSpec)
+---@field bezier fun(name: string, x1_or_spec: number|KomaCurveSpec, y1?: number, x2?: number, y2?: number, duration_ms?: integer)
+---@field spring fun(name: string, spec: { mass?: number, damping?: number, damping_ratio?: number, stiffness?: number, epsilon?: number })
 ---@field xwayland fun(spec: { enabled?: boolean, path?: string, isolate_agent_workspaces?: boolean })
 ---@field env fun(key: string, val: string)
 ---@field bind fun(chord: string, action: KomaAction|fun(ctx: KomaMacroContext), opts?: { desc?: string, repeat?: boolean, cooldown_ms?: integer, allow_when_locked?: boolean, pass_through?: boolean, edge?: "press"|"release"|"both", when_preempted?: "allow"|"ignore" }): KomaHandle
 ---@field unbind fun(chord: string)
 ---@field mode fun(name: string, spec: table)
 ---@field gesture fun(spec: { fingers: 2|3|4|5, direction: "left"|"right"|"up"|"down"|"horizontal"|"vertical"|"pinch_in"|"pinch_out", action: KomaAction|fun(ctx: KomaMacroContext), cooldown_ms?: integer, allow_when_locked?: boolean, when_preempted?: "allow"|"ignore", desc?: string }): KomaHandle
----@field on fun(event: string, callback: fun(ctx: KomaMacroContext))
----@field act { spawn: fun(argv: string[]): KomaAction, window: { close: fun(): KomaAction, float_toggle: fun(): KomaAction, pseudotile_toggle: fun(): KomaAction, fullscreen_toggle: fun(): KomaAction, drag_move: fun(): KomaAction, drag_resize: fun(): KomaAction, resize: fun(spec: { width?: integer, height?: integer }): KomaAction, move_direction: fun(dir: string): KomaAction, swap_direction: fun(dir: string): KomaAction, move_to_workspace: fun(ws: string): KomaAction, move_to_monitor: fun(name: string): KomaAction, move_to_monitor_direction: fun(dir: string): KomaAction, move_to_monitor_left: fun(): KomaAction, move_to_monitor_right: fun(): KomaAction, move_to_monitor_up: fun(): KomaAction, move_to_monitor_down: fun(): KomaAction }, monitor: { focus: fun(name: string): KomaAction, focus_direction: fun(dir: string): KomaAction, focus_left: fun(): KomaAction, focus_right: fun(): KomaAction, focus_up: fun(): KomaAction, focus_down: fun(): KomaAction }, dwindle: table, scrolling: { switch_preset_column_width: fun(): KomaAction, switch_preset_column_width_back: fun(): KomaAction, switch_preset_window_height: fun(): KomaAction, toggle_column_tabbed_display: fun(): KomaAction, switch_preset_window_height_back: fun(): KomaAction, reset_window_height: fun(): KomaAction, maximize_column: fun(): KomaAction, center_column: fun(): KomaAction, move_column_left: fun(): KomaAction, move_column_right: fun(): KomaAction, consume_window_into_column: fun(): KomaAction, expel_window_from_column: fun(): KomaAction, consume_or_expel_window_left: fun(): KomaAction, consume_or_expel_window_right: fun(): KomaAction, swipe: fun(): KomaAction }, scratchpad: table, focus: table, workspace: table, deck: table, scroll_strip: table, overview: table, mode: table, macro: table, compositor: table }
----@field rule { window: fun(spec: table): KomaHandle, layer: fun(spec: table): KomaHandle }
+---@field on fun(event: KomaEventName, callback: fun(ctx: KomaMacroContext, event?: table))
+---@field act { spawn: fun(argv: string[]): KomaAction, window: { close: fun(): KomaAction, float_toggle: fun(): KomaAction, pseudotile_toggle: fun(): KomaAction, fullscreen_toggle: fun(): KomaAction, drag_move: fun(): KomaAction, drag_resize: fun(): KomaAction, resize: fun(spec: { width?: integer, height?: integer }): KomaAction, move_direction: fun(dir: string): KomaAction, swap_direction: fun(dir: string): KomaAction, move_to_workspace: fun(ws: string): KomaAction, focus: fun(win_id: integer): KomaAction, move_to_monitor: fun(name: string): KomaAction, move_to_monitor_direction: fun(dir: string): KomaAction, move_to_monitor_left: fun(): KomaAction, move_to_monitor_right: fun(): KomaAction, move_to_monitor_up: fun(): KomaAction, move_to_monitor_down: fun(): KomaAction }, monitor: { focus: fun(name: string): KomaAction, focus_direction: fun(dir: string): KomaAction, focus_left: fun(): KomaAction, focus_right: fun(): KomaAction, focus_up: fun(): KomaAction, focus_down: fun(): KomaAction }, dwindle: table, scrolling: { switch_preset_column_width: fun(): KomaAction, switch_preset_column_width_back: fun(): KomaAction, switch_preset_window_height: fun(): KomaAction, toggle_column_tabbed_display: fun(): KomaAction, switch_preset_window_height_back: fun(): KomaAction, reset_window_height: fun(): KomaAction, maximize_column: fun(): KomaAction, center_column: fun(): KomaAction, move_column_left: fun(): KomaAction, move_column_right: fun(): KomaAction, consume_window_into_column: fun(): KomaAction, expel_window_from_column: fun(): KomaAction, consume_or_expel_window_left: fun(): KomaAction, consume_or_expel_window_right: fun(): KomaAction, swipe: fun(): KomaAction }, scratchpad: table, focus: table, workspace: { focus: fun(ws: string): KomaAction, focus_next: fun(): KomaAction, focus_prev: fun(): KomaAction, peek: fun(ws: string): KomaAction, set_layout: fun(mode: KomaLayoutMode, workspace?: string): KomaAction }, deck: table, scroll_strip: table, overview: table, mode: table, macro: table, compositor: table }
+---@field rule { window: fun(spec: KomaWindowRuleSpec): KomaHandle, layer: fun(spec: table): KomaHandle }
 ---@field macro { define: fun(spec: table): KomaHandle }
 koma = {}
