@@ -2,7 +2,7 @@
 
 This independent repository holds Koma's checked-in [LuaLS/LuaCATS definition snapshot](https://github.com/komawm/koma-types/blob/main/types/koma.lua) for configuration editors. The generator remains in [Koma's koma-lua crate](https://github.com/komawm/koma/blob/main/crates/koma-lua/src/typegen.rs), exposed by `komactl gen-types`; canonical API requirements live in the [Lua specification](https://github.com/komawm/docs/blob/main/docs/LUA_API_SPEC.md).
 
-The checked-in file is reproduced directly from `komactl gen-types` at Koma revision `aef9652814d216803dd05c1fb57b4fa340acc225` and validated by `luac -p` and SHA-256 checksum in [Artifact metadata](https://github.com/komawm/koma-types/blob/main/artifact.toml). No Rust crate or new generator is created here.
+The checked-in file is reproduced directly from `komactl gen-types` at Koma revision `aec39b880def0a0766ccce842cc9c3760d7debee` and validated by `luac -p` and SHA-256 checksum in [Artifact metadata](https://github.com/komawm/koma-types/blob/main/artifact.toml). No Rust crate or new generator is created here.
 
 When a newer Koma revision changes the Lua API, regenerate `types/koma.lua` via `komactl gen-types`, review its diff against the snapshot and update `artifact.toml` with the exact generator revision and SHA-256 checksum. Editor completion does not validate configuration execution or runtime compatibility.
 

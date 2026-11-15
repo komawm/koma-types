@@ -10,6 +10,7 @@
 ---@alias KomaBlockOut "agent_capture"|"screencast"|"screencopy"|"all"
 ---@alias KomaAnimationSolverKind "spring"|"hooke"|"hooke_spring"|"analytical_spring"|"analytical"
 ---@alias KomaKinematicProfile "instant"|"minimum_jerk"|"spring"|"hooke"|"hooke_spring"|"bezier"
+---@alias KomaPathSplineKind "auto"|"catmull_rom"|"bezier"
 ---@alias KomaEventName "compositor.start"|"config.reloaded"|"window.mapped"|"window.closed"|"window.focused"|"workspace.focused"|"output.changed"
 
 ---@class KomaHandle
@@ -157,6 +158,16 @@
 ---@field window_count integer
 ---@field active boolean
 
+---@class KomaAgentCursorSpec
+---@field enabled? boolean
+---@field size? number
+---@field accent_color? string
+---@field trail_enabled? boolean
+---@field fog_enabled? boolean
+---@field ripple_enabled? boolean
+---@field idle_timeout_ms? integer
+---@field idle_wobble? boolean
+
 ---@class KomaAppearanceSpec
 ---@field corner_radius? integer
 ---@field border? KomaBorderSpec
@@ -168,6 +179,7 @@
 ---@field dim_strength? number
 ---@field blur? KomaBlurSpec
 ---@field animations? KomaAnimationsSpec
+---@field agent_cursor? KomaAgentCursorSpec
 
 ---@class KomaKeyboardInputSpec
 ---@field rules? string
@@ -236,6 +248,14 @@
 ---@field epsilon? number
 ---@field bezier? number[]
 
+---@class KomaPathSpec
+---@field waypoints KomaAnchorPoint[]
+---@field spline? KomaPathSplineKind
+---@field button? "left"|"middle"|"right"
+---@field hold_before_move_ms? integer
+---@field hold_before_release_ms? integer
+---@field kinematics? KomaKinematicsSpec
+
 ---@class KomaMacroContext
 local MacroContext = {}
 ---@param app_regex string
@@ -264,6 +284,15 @@ function MacroContext:move_to(target, kinematics) end
 function MacroContext:click(target, opts) end
 ---@param spec { button?: "left"|"middle"|"right", from: KomaAnchorPoint, to: KomaAnchorPoint, hold_before_move_ms?: integer, kinematics?: KomaKinematicsSpec, hold_before_release_ms?: integer }
 function MacroContext:drag(spec) end
+---@param waypoints KomaAnchorPoint[]
+---@param opts? { spline?: KomaPathSplineKind, kinematics?: KomaKinematicsSpec }
+function MacroContext:move_path(waypoints, opts) end
+---@param spec KomaPathSpec
+function MacroContext:stroke_path(spec) end
+---@param spec KomaPathSpec
+function MacroContext:path(spec) end
+---@param immediate? boolean
+function MacroContext:settle_cursor(immediate) end
 ---@param spec { dx?: number, dy?: number, steps?: integer, step_ms?: integer }
 function MacroContext:scroll(spec) end
 ---@param utf8 string
