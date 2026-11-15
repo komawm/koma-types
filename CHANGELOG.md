@@ -6,7 +6,8 @@ All notable changes to the koma-types LuaLS definitions are recorded here. Versi
 
 ### Changed
 
-- Regenerated `types/koma.lua` from `komactl gen-types` at Koma revision `cfabbb81e9406f5cba69f8dcd21785989bca3743`, adding the `disable_while_trackpointing?` alias field on `KomaTouchpadInputSpec`.
+- Regenerated `types/koma.lua` from `komactl gen-types` at Koma revision `aef9652814d216803dd05c1fb57b4fa340acc225`, adding LuaLS types for `koma.bezier`, `koma.spring`, `KomaCurveSpec`, `KomaAnimationChannelConfig`, `KomaAnimationConfig` channels/solver fields, `KomaBorderConfig` dual-stop rotating gradient fields, `KomaWindowRuleSpec` rice overrides, desktop query types (`KomaWindowInfo`, `KomaOutputInfo`, `KomaWorkspaceInfo`), `MacroContext` query/`dispatch` methods, `koma.act.window.focus`/`koma.act.workspace.set_layout`, and `koma.on` event hooks (`KomaEventName`).
+- Previously synced Koma revision `cfabbb81e9406f5cba69f8dcd21785989bca3743` (`disable_while_trackpointing?` alias on `KomaTouchpadInputSpec`).
 - Previously synced Koma revision `40d58462aa6466fbfe3349da6a890c0ca1456c4c` (`InputConfigSpec`, 2D `MonitorSpec` fields, monitor focus/move actions).
 - Bumped both `github/codeql-action/init` and `github/codeql-action/analyze` to `v4.39.3`.
 
