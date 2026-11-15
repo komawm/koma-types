@@ -165,6 +165,7 @@
 ---@field trail_enabled? boolean
 ---@field fog_enabled? boolean
 ---@field ripple_enabled? boolean
+---@field label_enabled? boolean
 ---@field idle_timeout_ms? integer
 ---@field idle_wobble? boolean
 
