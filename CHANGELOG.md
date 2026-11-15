@@ -4,23 +4,21 @@ All notable changes to the koma-types LuaLS definitions are recorded here. Versi
 
 ## [Unreleased]
 
-### Changed
-
-- Regenerated `types/koma.lua` from `komactl gen-types` at Koma revision `aef9652814d216803dd05c1fb57b4fa340acc225`, adding LuaLS types for `koma.bezier`, `koma.spring`, `KomaCurveSpec`, `KomaAnimationChannelConfig`, `KomaAnimationConfig` channels/solver fields, `KomaBorderConfig` dual-stop rotating gradient fields, `KomaWindowRuleSpec` rice overrides, desktop query types (`KomaWindowInfo`, `KomaOutputInfo`, `KomaWorkspaceInfo`), `MacroContext` query/`dispatch` methods, `koma.act.window.focus`/`koma.act.workspace.set_layout`, and `koma.on` event hooks (`KomaEventName`).
-- Previously synced Koma revision `cfabbb81e9406f5cba69f8dcd21785989bca3743` (`disable_while_trackpointing?` alias on `KomaTouchpadInputSpec`).
-- Previously synced Koma revision `40d58462aa6466fbfe3349da6a890c0ca1456c4c` (`InputConfigSpec`, 2D `MonitorSpec` fields, monitor focus/move actions).
-- Bumped both `github/codeql-action/init` and `github/codeql-action/analyze` to `v4.39.3`.
-
-## [0.0.1] - 2026-11-14
+## [0.0.1] - 2026-11-15
 
 Development prerelease.
 
 ### Added
 
-- LuaLS/LuaCATS definition snapshot `types/koma.lua`, reproduced from `komactl gen-types` at Koma revision `c5837c17b92d71234320a502a56e635b70c5df19`.
-- Definitions covering `koma.layout`, `koma.unbind`, `koma.input` and `koma.appearance`.
+- LuaLS/LuaCATS definition snapshot `types/koma.lua`, reproduced from `komactl gen-types` at Koma revision `c8199965f6f6ea3bba595ce1c0563ab26d2e086a`.
+- Definitions covering `koma.layout`, `koma.unbind`, `koma.input`, `koma.appearance`, `koma.bezier`, `koma.spring`, `KomaCurveSpec`, `KomaAnimationChannelConfig`, `KomaAnimationConfig` channels/solver fields, `KomaBorderConfig` dual-stop rotating gradient fields, `KomaWindowRuleSpec` rice overrides, desktop query types (`KomaWindowInfo`, `KomaOutputInfo`, `KomaWorkspaceInfo`), `MacroContext` query/`dispatch` methods, `KomaKinematicProfile`, `KomaKinematicsSpec` (2D Hooke spring & cubic-bezier cursor kinematics for `MacroContext:move_to` and `MacroContext:drag`), `koma.act.window.focus`/`koma.act.workspace.set_layout`, and `koma.on` event hooks (`KomaEventName`).
 - `artifact.toml` provenance metadata with the generator revision and SHA-256 checksum of the snapshot.
 - Release packaging script and tag-triggered GitHub prerelease workflow publishing `koma-types-0.0.1.tar.gz`, a standalone `koma.lua` and `SHA256SUMS`.
+
+### Changed
+
+- Synced Koma revisions `40d58462aa6466fbfe3349da6a890c0ca1456c4c` (`InputConfigSpec`, 2D `MonitorSpec` fields, monitor focus/move actions), `cfabbb81e9406f5cba69f8dcd21785989bca3743` (`disable_while_trackpointing?` alias on `KomaTouchpadInputSpec`), `aef9652814d216803dd05c1fb57b4fa340acc225` (Lua 5.4 animations, gradients, queries & events), and `c8199965f6f6ea3bba595ce1c0563ab26d2e086a` (Hooke spring / Bezier mouse kinematics & Wayland compat release baseline).
+- Bumped both `github/codeql-action/init` and `github/codeql-action/analyze` to `v4.39.3`.
 
 ### Notes
 

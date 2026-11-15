@@ -9,6 +9,7 @@
 ---@alias KomaPresetColumnWidth number|{ proportion: number }|{ fixed: integer }
 ---@alias KomaBlockOut "agent_capture"|"screencast"|"screencopy"|"all"
 ---@alias KomaAnimationSolverKind "spring"|"hooke"|"hooke_spring"|"analytical_spring"|"analytical"
+---@alias KomaKinematicProfile "instant"|"minimum_jerk"|"spring"|"hooke"|"hooke_spring"|"bezier"
 ---@alias KomaEventName "compositor.start"|"config.reloaded"|"window.mapped"|"window.closed"|"window.focused"|"workspace.focused"|"output.changed"
 
 ---@class KomaHandle
@@ -223,6 +224,18 @@
 ---@field touchpad? KomaTouchpadInputSpec
 ---@field tablet? KomaTabletInputSpec
 
+---@class KomaKinematicsSpec
+---@field profile? KomaKinematicProfile
+---@field duration_ms? integer
+---@field arc_curvature? number
+---@field curve? string
+---@field mass? number
+---@field damping? number
+---@field damping_ratio? number
+---@field stiffness? number
+---@field epsilon? number
+---@field bezier? number[]
+
 ---@class KomaMacroContext
 local MacroContext = {}
 ---@param app_regex string
@@ -244,12 +257,12 @@ function MacroContext:key(chord, opts) end
 ---@param gap_ms integer
 function MacroContext:sequence(chords, gap_ms) end
 ---@param target KomaAnchorPoint
----@param kinematics? { profile?: "instant"|"minimum_jerk"|"spring", duration_ms?: integer, arc_curvature?: number }
+---@param kinematics? KomaKinematicsSpec
 function MacroContext:move_to(target, kinematics) end
 ---@param target KomaAnchorPoint
 ---@param opts? { button?: "left"|"middle"|"right", clicks?: integer, hold_ms?: integer }
 function MacroContext:click(target, opts) end
----@param spec { button?: "left"|"middle"|"right", from: KomaAnchorPoint, to: KomaAnchorPoint, hold_before_move_ms?: integer, kinematics?: { profile?: "instant"|"minimum_jerk"|"spring", duration_ms?: integer, arc_curvature?: number }, hold_before_release_ms?: integer }
+---@param spec { button?: "left"|"middle"|"right", from: KomaAnchorPoint, to: KomaAnchorPoint, hold_before_move_ms?: integer, kinematics?: KomaKinematicsSpec, hold_before_release_ms?: integer }
 function MacroContext:drag(spec) end
 ---@param spec { dx?: number, dy?: number, steps?: integer, step_ms?: integer }
 function MacroContext:scroll(spec) end
