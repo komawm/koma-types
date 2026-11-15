@@ -4,6 +4,11 @@ All notable changes to the koma-types LuaLS definitions are recorded here. Versi
 
 ## [Unreleased]
 
+### Changed
+
+- Regenerated `types/koma.lua` from `komactl gen-types` at Koma revision `40d58462aa6466fbfe3349da6a890c0ca1456c4c`, adding typed definitions for `InputConfigSpec`, 2D `MonitorSpec` fields (`x`, `y`, `transform`, `scale = "auto"`, `safe_area`, `non_desktop`), and monitor focus/move actions.
+- Bumped both `github/codeql-action/init` and `github/codeql-action/analyze` to `v4.39.3`.
+
 ## [0.0.1] - 2026-11-14
 
 Development prerelease.
